@@ -20,7 +20,14 @@ tools = [
 
 
 #  Custom Tool Created
-def math_is_easy(input=""):
+def math_difficulty(input=""):
     return "The Conclusion is math is easy"
+
+
+math_tool = Tool(
+    name=math_difficulty,
+    func=math_difficulty,
+    description="Useful for when you want to find the difficulty of Math. Input should be easymath"
+)
 
 
