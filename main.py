@@ -6,6 +6,8 @@ from langchain.tools import DuckDuckGoSearchRun
 from langchain.agents import Tool
 from langchain.tools import BaseTool
 from langchain.agents import initialize_agent
+from bs4 import BeautifulSoup
+import requests
 from decouple import config
 import random
 
