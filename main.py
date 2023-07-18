@@ -44,3 +44,9 @@ random_tool = Tool(
 )
 
 tools = [search, math_tool, random_tool]
+
+
+# k=3 is max number of previous conversations saved
+memory = ConversationBufferWindowMemory(memory_key='chat_history', k=3, return_messages=True)
+
+
