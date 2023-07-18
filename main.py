@@ -4,7 +4,9 @@ from langchain.chains.conversation.memory import ConversationBufferWindowMemory
 from langchain.utilities import SerpAPIWrapper
 from langchain.agents import Tool
 from langchain.tools import BaseTool
+from langchain.agents import initialize_agent
 from decouple import config
+import random
 
 
 llm = ChatAnthropic(anthropic_api_key=config("ANTHROPIC_API_KEY"), temperature=0)
@@ -25,9 +27,19 @@ def math_difficulty(input=""):
 
 
 math_tool = Tool(
-    name=math_difficulty,
+    name="Math Difficulty",
     func=math_difficulty,
     description="Useful for when you want to find the difficulty of Math. Input should be easymath"
 )
 
+
+def random_number(input=""):
+    return random.randint(0,5)
+
+
+random_tool = Tool(
+    name="Random Number",
+    func=random_number,
+    description="Useful for when you want to find a random number. Input should be random"
+)
 
