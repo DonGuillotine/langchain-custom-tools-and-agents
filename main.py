@@ -2,6 +2,7 @@ from langchain import OpenAI
 from langchain.chat_models import ChatAnthropic
 from langchain.chains.conversation.memory import ConversationBufferWindowMemory
 from langchain.utilities import SerpAPIWrapper
+from langchain.tools import DuckDuckGoSearchRun
 from langchain.agents import Tool
 from langchain.tools import BaseTool
 from langchain.agents import initialize_agent
@@ -10,6 +11,17 @@ import random
 
 
 llm = ChatAnthropic(anthropic_api_key=config("ANTHROPIC_API_KEY"), temperature=0)
+
+search = DuckDuckGoSearchRun()
+# defining a single tool
+tools = [
+    Tool(
+        name = "search",
+        func=search.run,
+        description="useful for when you need to answer questions about current events. You should ask targeted questions"
+    )
+]
+
 
 # search = SerpAPIWrapper(serpapi_api_key=config("SERPAPI_API_KEY"))
 # tools = [
@@ -43,7 +55,7 @@ random_tool = Tool(
     description="Useful for when you want to find a random number. Input should be random"
 )
 
-my_tools = [math_tool, random_tool]
+my_tools = [search, math_tool, random_tool]
 
 
 # k=3 is max number of previous conversations saved
@@ -60,4 +72,4 @@ conversational_agent = initialize_agent(
     memory=memory
 )
 
-conversational_agent.run("How difficult is math?")
+conversational_agent.run("Who is the current weather in South of Nigeria?")
