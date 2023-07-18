@@ -43,3 +43,4 @@ random_tool = Tool(
     description="Useful for when you want to find a random number. Input should be random"
 )
 
+tools = [search, math_tool, random_tool]
