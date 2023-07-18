@@ -11,14 +11,14 @@ import random
 
 llm = ChatAnthropic(anthropic_api_key=config("ANTHROPIC_API_KEY"), temperature=0)
 
-search = SerpAPIWrapper(serpapi_api_key=config("SERPAPI_API_KEY"))
-tools = [
-    Tool(
-        name = "Current Search",
-        func=search.run,
-        description="useful for when you need to answer questions about current events or the current state of the world"
-    ),
-]
+# search = SerpAPIWrapper(serpapi_api_key=config("SERPAPI_API_KEY"))
+# tools = [
+#     Tool(
+#         name = "Current Search",
+#         func=search.run,
+#         description="useful for when you need to answer questions about current events or the current state of the world"
+#     ),
+# ]
 
 
 #  Custom Tool Created
@@ -43,10 +43,21 @@ random_tool = Tool(
     description="Useful for when you want to find a random number. Input should be random"
 )
 
-tools = [search, math_tool, random_tool]
+my_tools = [math_tool, random_tool]
 
 
 # k=3 is max number of previous conversations saved
 memory = ConversationBufferWindowMemory(memory_key='chat_history', k=3, return_messages=True)
 
 
+conversational_agent = initialize_agent(
+    agent='chat-conversational-react-description',
+    tools=my_tools,
+    llm=llm,
+    verbose=True,
+    max_iterations=3,
+    early_stopping_method='generate',
+    memory=memory
+)
+
+conversational_agent.run("How difficult is math?")
