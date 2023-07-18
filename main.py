@@ -18,5 +18,9 @@ tools = [
     ),
 ]
 
-response = search.run("How do I treat an ant sting?")
-print(response)
+
+#  Custom Tool Created
+def math_is_easy(input=""):
+    return "The Conclusion is math is easy"
+
+
