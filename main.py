@@ -8,7 +8,10 @@ from bs4 import BeautifulSoup
 import requests
 from decouple import config
 import random
+import requests
 
+
+BITLY_API_TOKEN = config("BITLY_API_TOKEN")
 
 llm = ChatOpenAI(openai_api_key=config("OPENAI_API_KEY"), temperature=0)
 
@@ -69,7 +72,40 @@ class WebPageTool(BaseTool):
 
 page_getter = WebPageTool()
 
-my_tools = [math_tool, random_tool, page_getter]
+
+class UrlShortnerTool(BaseTool):
+    name = "Shorten URL"
+    description = "Useful for when you need to shorten a URL"
+
+    def _run(self, url: str):
+        global BITLY_API_TOKEN
+
+        api_url = 'https://api-ssl.bitly.com/v4/shorten'
+        headers = {
+            'Authorization': f'Bearer {BITLY_API_TOKEN}',
+            'Content-Type': 'application/json'
+        }
+        data = {
+            'long_url': url
+        }
+
+        try:
+            response = requests.post(api_url, json=data, headers=headers)
+            response.raise_for_status()
+            short_url = response.json()['id']
+            return short_url
+        except requests.exceptions.RequestException as e:
+            print(f"An error occurred: {e}")
+            return None
+
+
+    def _arun(self, url: str):
+        raise NotImplementedError("This tool does not support async")
+
+url_shortner = UrlShortnerTool()
+
+
+my_tools = [math_tool, random_tool, page_getter, url_shortner]
 
 
 # k=3 is max number of previous conversations saved
@@ -87,4 +123,4 @@ conversational_agent = initialize_agent(
 )
 
 
-conversational_agent.run("What are some intresting articles on https://gamerant.com/ today?")
+conversational_agent.run("I need you to shorten this URL https://www.freecodecamp.org/news/python-automation-scripts")
