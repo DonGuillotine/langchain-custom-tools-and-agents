@@ -1,5 +1,6 @@
 from langchain import OpenAI 
 from langchain.chat_models import ChatAnthropic
+from langchain.chat_models import ChatOpenAI
 from langchain.chains.conversation.memory import ConversationBufferWindowMemory
 from langchain.utilities import SerpAPIWrapper
 from langchain.tools import DuckDuckGoSearchRun
@@ -12,7 +13,7 @@ from decouple import config
 import random
 
 
-llm = ChatAnthropic(anthropic_api_key=config("ANTHROPIC_API_KEY"), temperature=0)
+llm = ChatOpenAI(openai_api_key=config("OPENAI_API_KEY"), temperature=0)
 
 search = DuckDuckGoSearchRun()
 # defining a single tool
@@ -75,28 +76,31 @@ class WebPageTool(BaseTool):
         
         if len(stripped_content) > 4000:
             stripped_content = stripped_content[:4000]
-        print(stripped_content)
+            return stripped_content
 
     def _arun(self, webpage: str):
         raise NotImplementedError("This tool does not support async")
 
 page_getter = WebPageTool()
 
-# my_tools = [search, math_tool, random_tool]
+my_tools = [math_tool, random_tool, page_getter]
 
 
 # k=3 is max number of previous conversations saved
-# memory = ConversationBufferWindowMemory(memory_key='chat_history', k=3, return_messages=True)
+memory = ConversationBufferWindowMemory(memory_key='chat_history', k=3, return_messages=True)
 
 
-# conversational_agent = initialize_agent(
-#     agent='chat-conversational-react-description',
-#     tools=my_tools,
-#     llm=llm,
-#     verbose=True,
-#     max_iterations=3,
-#     early_stopping_method='generate',
-#     memory=memory
-# )
+conversational_agent = initialize_agent(
+    agent='chat-conversational-react-description',
+    tools=my_tools,
+    llm=llm,
+    verbose=True,
+    max_iterations=3,
+    early_stopping_method='generate',
+    memory=memory
+)
 
-# conversational_agent.run("Who is the current weather in South of Nigeria?")
+
+
+
+conversational_agent.run("What are some intresting articles on https://gamerant.com/ today?")
