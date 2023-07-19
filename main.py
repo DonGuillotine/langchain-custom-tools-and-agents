@@ -1,8 +1,5 @@
-from langchain import OpenAI 
-from langchain.chat_models import ChatAnthropic
 from langchain.chat_models import ChatOpenAI
 from langchain.chains.conversation.memory import ConversationBufferWindowMemory
-from langchain.utilities import SerpAPIWrapper
 from langchain.tools import DuckDuckGoSearchRun
 from langchain.agents import Tool
 from langchain.tools import BaseTool
@@ -15,8 +12,8 @@ import random
 
 llm = ChatOpenAI(openai_api_key=config("OPENAI_API_KEY"), temperature=0)
 
+
 search = DuckDuckGoSearchRun()
-# defining a single tool
 tools = [
     Tool(
         name = "search",
@@ -26,17 +23,6 @@ tools = [
 ]
 
 
-# search = SerpAPIWrapper(serpapi_api_key=config("SERPAPI_API_KEY"))
-# tools = [
-#     Tool(
-#         name = "Current Search",
-#         func=search.run,
-#         description="useful for when you need to answer questions about current events or the current state of the world"
-#     ),
-# ]
-
-
-#  Custom Tool Created
 def math_difficulty(input=""):
     return "The Conclusion is math is easy"
 
@@ -99,8 +85,6 @@ conversational_agent = initialize_agent(
     early_stopping_method='generate',
     memory=memory
 )
-
-
 
 
 conversational_agent.run("What are some intresting articles on https://gamerant.com/ today?")
