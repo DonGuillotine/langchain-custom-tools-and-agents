@@ -57,21 +57,40 @@ random_tool = Tool(
     description="Useful for when you want to find a random number. Input should be random"
 )
 
-my_tools = [search, math_tool, random_tool]
+def stripped_webpage(webpage):
+    response = requests.get(webpage)
+    html_content = response.text
+    
+    
+    def strip_html_tags(html_content):
+        soup = BeautifulSoup(html_content, "html.parser")
+        stripped_text = soup.get_text()
+        return stripped_text
+    
+    stripped_content = strip_html_tags(html_content)
+    
+    if len(stripped_content) > 4000:
+        stripped_content = stripped_content[:4000]
+    print(stripped_content)
+
+
+stripped_webpage('https://en.wikipedia.org/wiki/Beautiful_Soup_(HTML_parser)')
+
+# my_tools = [search, math_tool, random_tool]
 
 
 # k=3 is max number of previous conversations saved
-memory = ConversationBufferWindowMemory(memory_key='chat_history', k=3, return_messages=True)
+# memory = ConversationBufferWindowMemory(memory_key='chat_history', k=3, return_messages=True)
 
 
-conversational_agent = initialize_agent(
-    agent='chat-conversational-react-description',
-    tools=my_tools,
-    llm=llm,
-    verbose=True,
-    max_iterations=3,
-    early_stopping_method='generate',
-    memory=memory
-)
+# conversational_agent = initialize_agent(
+#     agent='chat-conversational-react-description',
+#     tools=my_tools,
+#     llm=llm,
+#     verbose=True,
+#     max_iterations=3,
+#     early_stopping_method='generate',
+#     memory=memory
+# )
 
-conversational_agent.run("Who is the current weather in South of Nigeria?")
+# conversational_agent.run("Who is the current weather in South of Nigeria?")
