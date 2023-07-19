@@ -57,24 +57,30 @@ random_tool = Tool(
     description="Useful for when you want to find a random number. Input should be random"
 )
 
-def stripped_webpage(webpage):
-    response = requests.get(webpage)
-    html_content = response.text
-    
-    
-    def strip_html_tags(html_content):
-        soup = BeautifulSoup(html_content, "html.parser")
-        stripped_text = soup.get_text()
-        return stripped_text
-    
-    stripped_content = strip_html_tags(html_content)
-    
-    if len(stripped_content) > 4000:
-        stripped_content = stripped_content[:4000]
-    print(stripped_content)
 
+class WebPageTool(BaseTool):
+    name = "Get Webpage"
+    description = "Useful for when you need to get the content from a specific webpage"
 
-stripped_webpage('https://en.wikipedia.org/wiki/Beautiful_Soup_(HTML_parser)')
+    def _run(self, webpage: str):
+        response = requests.get(webpage)
+        html_content = response.text
+        
+        def strip_html_tags(html_content):
+            soup = BeautifulSoup(html_content, "html.parser")
+            stripped_text = soup.get_text()
+            return stripped_text
+        
+        stripped_content = strip_html_tags(html_content)
+        
+        if len(stripped_content) > 4000:
+            stripped_content = stripped_content[:4000]
+        print(stripped_content)
+
+    def _arun(self, webpage: str):
+        raise NotImplementedError("This tool does not support async")
+
+page_getter = WebPageTool()
 
 # my_tools = [search, math_tool, random_tool]
 
