@@ -123,4 +123,4 @@ conversational_agent = initialize_agent(
 )
 
 
-conversational_agent.run("I need you to shorten this URL https://www.freecodecamp.org/news/python-automation-scripts")
+conversational_agent.run("What are the top headlines from https://www.bbc.co.uk today?")
