@@ -12,3 +12,7 @@ toolkit = ZapierToolkit.from_zapier_nla_wrapper(zapier)
 agent = initialize_agent(
     toolkit.get_tools(), llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True
 )
+
+agent.run(
+    "Send a Slack message to @Donald Nwokoro Let him know that this message was sent by an AI Agent!"
+)
