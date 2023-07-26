@@ -14,5 +14,5 @@ agent = initialize_agent(
 )
 
 agent.run(
-    "Send a Slack message to @Donald Nwokoro Let him know that this message was sent by an AI Agent!"
+    "write a 100 words essay to gify312@gmail.com"
 )
